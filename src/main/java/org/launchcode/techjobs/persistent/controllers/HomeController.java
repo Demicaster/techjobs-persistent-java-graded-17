@@ -1,6 +1,7 @@
 package org.launchcode.techjobs.persistent.controllers;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import org.launchcode.techjobs.persistent.models.Employer;
 import org.launchcode.techjobs.persistent.models.Skill;
 import org.launchcode.techjobs.persistent.models.Job;
@@ -16,6 +17,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
+
+import static org.springframework.util.ClassUtils.isPresent;
 
 /**
  * Created by LaunchCode
@@ -58,7 +61,11 @@ public class HomeController {
             return "add";
         }
 
-        newJob.setEmployer(employerRepository.findById(employerId).get());
+        if(employerRepository.findById(employerId).isPresent()) {
+        Employer newEmployer = employerRepository.findById(employerId).get();
+            newJob.setEmployer(newEmployer);
+        }
+
 
         List<Skill> skillObjs = (List<Skill>) skillRepository.findAllById(skills);
         newJob.setSkills(skillObjs);
